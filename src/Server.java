@@ -1,84 +1,86 @@
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
-    public static final int PORT = 8888;
-    public static LinkedList<ServerThread> serverList = new LinkedList<>();
+    private static final int PORT = 8888;
 
-    public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(PORT);
-        System.out.println("Server Started");
-        try {
-            while (true) {
-                Socket socket = server.accept();
-                try {
-                    serverList.add(new ServerThread(socket));
-                } catch (IOException e) {
-                    socket.close();
-                }
-            }
-        } finally {
-            server.close();
-        }
-    }
-}
+    ConcurrentHashMap<String, Socket> activeClients = new ConcurrentHashMap<String, Socket>();
 
-    class ServerThread extends Thread {
+    static int clientCount;
+    static String clientID;
 
-        private Socket socket;
-        private DataInputStream in;
-        private DataOutputStream out;
+    Socket clientSocket;
 
-        public ServerThread(Socket socket) throws IOException {
+    public class ClientHandler implements Runnable{
+        BufferedReader reader;
+        Socket socket;
+
+        public ClientHandler(Socket socket){
+            try {
             this.socket = socket;
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
-            start();
+            InputStreamReader isReader = new InputStreamReader(socket.getInputStream());
+            reader = new BufferedReader(isReader);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
+
         @Override
         public void run() {
             String message;
             try {
-                try {
-                    while (true) {
-                        message = in.readUTF();
-                        if(message.equals("stop")) {
-                            this.downService();
-                            break;
-                        }
-                        for (ServerThread msg : Server.serverList) {
-                            System.out.println(message);
-                            msg.send(message);
-                        }
-                    }
-                } catch (NullPointerException ignored) {}
-            } catch (IOException e) {
-                this.downService();
-            }
-        }
-
-        private void send(String msg) throws IOException {
-            out.writeUTF(msg);
-            out.flush();
-        }
-
-        private void downService() {
-            try {
-                if(!socket.isClosed()) {
-                    socket.close();
-                    in.close();
-                    out.close();
-                    for (ServerThread vr : Server.serverList) {
-                        if(vr.equals(this)) vr.interrupt();
-                        Server.serverList.remove(this);
+                while ((message = reader.readLine()) != null){
+                    for(Map.Entry<String, Socket> entry: activeClients.entrySet()) {
+                        Socket socket = entry.getValue();
+                        System.out.println(socket);
+                        System.out.println(message);
+                        sendMessage(message, socket);
                     }
                 }
-            } catch (IOException ignored) {
-
+            } catch (IOException e){
+                e.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        new Server().go();
+    }
+
+    public void go(){
+        try {
+            ServerSocket serverSocket = new ServerSocket(PORT);
+            while (true){
+                clientSocket = serverSocket.accept();
+                clientCount++;
+                clientID = Integer.toString(clientCount);
+                activeClients.put(clientID, clientSocket);
+                Thread thread = new Thread(new ClientHandler(clientSocket));
+                thread.start();
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(String message, Socket socket) {
+       // Iterator iterator = writers.iterator();
+        //while (iterator.hasNext()){
+          try {
+                //PrintWriter writer = (PrintWriter) iterator.next();
+              PrintWriter writer = new PrintWriter(socket.getOutputStream());
+                writer.println(message);
+                writer.flush();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        //}
+
+    }
 }
 
 
