@@ -5,6 +5,8 @@ import java.util.List;
 
 public class ComponentManager implements Component{
     List<Component> components = new ArrayList<>();
+
+    @Override
     public void addComponent(Component component) {
         components.add(component);
     }
@@ -14,5 +16,9 @@ public class ComponentManager implements Component{
         for (Component component : components) {
             component.showComponent();
         }
+    }
+
+    public void removeComponent(Component component){
+        components.remove(component);
     }
 }

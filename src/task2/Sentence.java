@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Sentence implements Component{
     List<Component> components = new ArrayList<>();
+
+    @Override
     public void addComponent(Component component) {
         components.add(component);
     }

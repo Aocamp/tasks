@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Word implements Component {
     List<Component> components = new ArrayList<>();
+    @Override
     public void addComponent(Component component) {
         components.add(component);
     }
