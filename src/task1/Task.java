@@ -15,6 +15,7 @@ public class Task {
         while (!exit){
         System.out.println("«1. Для создания массива из нечетных числе нажмите 1».\n" +
                 "«2. Для создания массива из чисел Фибоначчи нажмите 2»\n" +
+                "«3. Для создания двумерного массива нажмите 3»\n" +
                 "«4. Для выхода из приложения нажмите 4.»\n");
         Scanner scan = new Scanner(System.in);
         System.out.print("number: ");
@@ -99,12 +100,8 @@ public class Task {
             }
         }
 
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                System.out.print(array[i][j] + " ");
-            }
-            System.out.println();
+        for (int[] a: array) {
+            System.out.println(Arrays.toString(a));
         }
-
     }
 }
