@@ -1,9 +1,7 @@
 package task1;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import javax.management.ObjectName;
+import java.util.*;
 
 public class Task {
     public static void main(String[] args) {
@@ -30,6 +28,8 @@ public class Task {
             case 1: array();
                 break;
             case 2: fibonachi();
+                break;
+            case 3: doubleArray();
                 break;
             case 4:
                 exit = true;
@@ -69,5 +69,42 @@ public class Task {
         }
         System.out.println(Arrays.toString(fibo));
         System.out.println();
+    }
+
+    private void doubleArray(){
+        int row = 8;
+        int col = 5;
+        int[][] array = new int[row][col];
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j < col; j++){
+                array[i][j]=(int)(Math.random()*90)+10;
+            }
+        }
+
+        int[] anArray = new int[40];
+        int count = 0;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                anArray[count++] = array[i][j];
+            }
+        }
+
+        Arrays.sort(anArray);
+
+        count = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                array[i][j] = anArray[count++];
+            }
+        }
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                System.out.print(array[i][j] + " ");
+            }
+            System.out.println();
+        }
+
     }
 }

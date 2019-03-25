@@ -1,19 +1,18 @@
 package task2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Word implements Component {
-    List<Component> components = new ArrayList<>();
-    @Override
-    public void addComponent(Component component) {
-        components.add(component);
+    String word;
+
+    public Word(String word){
+        this.word = word;
     }
 
     @Override
-    public void showComponent() {
-        for (Component component : components) {
-            component.showComponent();
-        }
+    public void write() {
+        System.out.print(word);
     }
 }
