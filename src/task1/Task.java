@@ -59,7 +59,9 @@ public class Task {
         List<Integer> list = new ArrayList<>();
         int number1 = 1;
         int number2 = 1;
-        for (int i = 0; i < fibo.length; i++){
+        list.add(number1);
+        list.add(number2);
+        for (int i = 2; i < fibo.length; i++){
             int number3 = number1 + number2;
             list.add(number3);
             number1 = number2;

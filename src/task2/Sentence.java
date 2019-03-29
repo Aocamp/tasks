@@ -3,20 +3,40 @@ package task2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Sentence implements Component{
-    List<Component> components = new ArrayList<>();
+    private List<Component> components = new ArrayList<>();
 
-    public Sentence(Component... component) {
-        components.addAll(Arrays.asList(component));
+    @Override
+    public void addComponent(Object component) {
+        Word word = new Word();
+        word.addComponent(getSentence(component));
+
+        components.add(word);
     }
 
-    public void addComponent(Component... component) {
-        components.addAll(Arrays.asList(component));
+    @Override
+    public Component getChild(int i) {
+        return components.get(i);
     }
 
     public void removeComponent(Component component){
         components.remove(component);
+    }
+
+    private String getSentence(Object component){
+        String[] s = component
+                .toString()
+                .replaceAll("\\[", "")
+                .replaceAll("\\]", "")
+                .split("\\s*[.,?] ");
+
+        for (String sentence : s) {
+            System.out.println("Sentence: " + sentence);
+        }
+
+        return Arrays.toString(s);
     }
 
     @Override

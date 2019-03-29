@@ -5,26 +5,40 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Paragraph implements Component{
-    List<Component> components = new ArrayList<>();
+    private List<Component> components = new ArrayList<>();
 
-    public Paragraph(Component... component) {
-        components.addAll(Arrays.asList(component));
+    private static final String PARAGRAPH_SPLIT_REGEX = "(?i)(?<=[.?!])\\\\S+(?=[a-z])";
+
+    public void addComponent(Object component) {
+        Sentence sentence = new Sentence();
+        sentence.addComponent(getParagraph(component));
+
+        components.add(sentence);
     }
 
-    public void addComponent(Component... component) {
-        components.addAll(Arrays.asList(component));
+    @Override
+    public Component getChild(int i) {
+        return components.get(i);
     }
 
     public void removeComponent(Component component){
         components.remove(component);
     }
 
+    private String getParagraph(Object component){
+        String[] s = component.toString().trim().split("\\n\\s");
+
+        for (String paragraph : s) {
+            System.out.println("Paragraph: " + paragraph);
+        }
+
+        return Arrays.toString(s);
+    }
+
     @Override
     public void write() {
         for (Component component : components) {
-            System.out.print("  ");
             component.write();
-            System.out.println();
         }
     }
 }
