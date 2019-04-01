@@ -7,8 +7,6 @@ import java.util.List;
 public class Paragraph implements Component{
     private List<Component> components = new ArrayList<>();
 
-    private static final String PARAGRAPH_SPLIT_REGEX = "(?i)(?<=[.?!])\\\\S+(?=[a-z])";
-
     public void addComponent(Object component) {
         Sentence sentence = new Sentence();
         sentence.addComponent(getParagraph(component));
